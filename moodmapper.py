@@ -12,6 +12,16 @@ EMOTION_WORDS: Dict[str, List[str]] = {
     "surprise": ["surprised", "shocked", "astonished", "amazed"],
 }
 
+# Portuguese synonyms for emotion detection
+EMOTION_WORDS_PT: Dict[str, List[str]] = {
+    "joy": ["feliz", "alegria", "contente", "animado", "esperanca", "riso"],
+    "sadness": ["triste", "desanimo", "lagrima", "chorar", "melancolia", "deprimido"],
+    "anger": ["raiva", "furioso", "irritado", "odio"],
+    "fear": ["medo", "assustado", "apavorado", "nervoso", "panico"],
+    "disgust": ["nojo", "repulsa", "enojado"],
+    "surprise": ["surpreso", "chocado", "espantado", "admirado"],
+}
+
 EMOTION_COLORS = {
     "joy": "yellow",
     "sadness": "blue",
@@ -33,14 +43,15 @@ EMOTION_MUSIC = {
 SENTENCE_RE = re.compile(r"[^.!?]+[.!?]?")
 
 
-def analyze_text(text: str):
+def analyze_text(text: str, lang: str = "en"):
     """Return list of dicts with sentence and dominant emotion."""
+    words_map = EMOTION_WORDS_PT if lang == "pt" else EMOTION_WORDS
     sentences = [s.strip() for s in SENTENCE_RE.findall(text) if s.strip()]
     results = []
     for sentence in sentences:
         word_counts = Counter(re.findall(r"\b\w+\b", sentence.lower()))
         scores = {}
-        for emotion, words in EMOTION_WORDS.items():
+        for emotion, words in words_map.items():
             scores[emotion] = sum(word_counts.get(w, 0) for w in words)
         dominant = max(scores, key=scores.get) if any(scores.values()) else None
         results.append({
@@ -72,12 +83,14 @@ def main():
     parser = argparse.ArgumentParser(description="Simple MoodMapper")
     parser.add_argument("input", help="path to text file")
     parser.add_argument("--json", dest="json_path", help="export analysis as JSON")
+    parser.add_argument("--lang", choices=["en", "pt"], default="en",
+                        help="language of the text (en or pt)")
     args = parser.parse_args()
 
     with open(args.input, "r", encoding="utf-8") as f:
         text = f.read()
 
-    results = analyze_text(text)
+    results = analyze_text(text, args.lang)
     summary, color, music = summarize(results)
 
     for item in results:
