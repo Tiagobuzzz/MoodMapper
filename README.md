@@ -8,12 +8,13 @@ Simple tool to map emotions in text.
 2. Run the analyzer:
 
 ```bash
-python3 moodmapper.py mytext.txt --json result.json
+python3 moodmapper.py mytext.txt --json result.json --lang pt
 ```
 
 The script will print the dominant emotion for each sentence, a short summary
-and suggestions for color and music. If `--json` is provided, the per-sentence
-analysis is saved to the given file in JSON format.
+and suggestions for color and music. Use `--lang pt` for Portuguese text (default
+is English). If `--json` is provided, the per-sentence analysis is saved to the
+given file in JSON format.
 
 ### With transformers
 
