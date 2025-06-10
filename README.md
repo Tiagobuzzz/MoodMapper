@@ -28,3 +28,19 @@ Run the advanced analyzer which draws a sentiment chart and can export results t
 ```bash
 python3 moodmapper_transformer.py mytext.txt --json result.json --image grafico.png
 ```
+
+### Web app (Streamlit)
+
+Install all optional dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the interactive web interface:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Enter your text (one line per snippet) and click **Analisar** to see the emotional analysis, color-coded chart and suggested soundtrack. You can also download the JSON results directly from the page.
